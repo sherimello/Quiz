@@ -1,11 +1,15 @@
 package com.example.quiz;
 
+import static java.lang.System.exit;
+
 import android.animation.ObjectAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,6 +24,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import com.example.quiz.classes.ProgressClass;
+import com.example.quiz.classes.ScoreClass;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -28,16 +33,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private RelativeLayout relative_progress;
     private View view_progress;
-    private TextView text_question_count, text_option1, text_option2, text_option3, text_option4, text_question, text_counter;
+    private TextView text_question_count, text_option1, text_option2, text_option3, text_option4, text_question, text_counter, text_score;
     private CardView card_answer, card_query, card_result;
     private Button button_play_again, button_quit;
     private ScrollView scroll_query;
     private ProgressClass pc;
     private ImageView image_done;
-    private ProgressBar progressBar;
+    private ProgressBar progressBar, progress_score;
     private int chosen = 0;
     private ObjectAnimator animator;
-    private ArrayList<Integer> answers;
+    private ArrayList<String> answers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +63,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         text_option3 = findViewById(R.id.text_option3);
         text_option4 = findViewById(R.id.text_option4);
         text_question = findViewById(R.id.text_question);
+        text_score = findViewById(R.id.text_score);
         image_done = findViewById(R.id.image_done);
         progressBar = findViewById(R.id.progress_circular);
+        progress_score = findViewById(R.id.progress_score);
         text_counter = findViewById(R.id.text_counter);
 
         card_answer.setOnClickListener(this);
@@ -79,9 +86,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
+        if (v == button_quit) {
+            exit(1);
+        }
+
         if (v == button_play_again) {
             card_result.animate().scaleY(.1f).scaleX(.2f).alpha(0).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
             new Handler().postDelayed(() -> {
+                pc.setQuestionCountToNegativeOne();
+                pc.updateProgress();
                 card_result.setVisibility(View.GONE);
                 card_query.animate().scaleY(1).scaleX(1).alpha(1).setDuration(500).setInterpolator(new OvershootInterpolator());
                 scroll_query.setVisibility(View.VISIBLE);
@@ -90,9 +103,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (v == card_answer) {
             if (scroll_query.getVisibility() == View.VISIBLE && card_query.getScaleY() == 1 && chosen != 0) {
+                answers.add(String.valueOf(chosen));
                 chosen = 0;
-                answers.add(chosen);
-                if (answers.size() == 3) {
+                if (answers.size() == 25) {
+                    setScoreProgress();
                     scroll_query.setVisibility(View.GONE);
                     card_query.animate().scaleY(.1f).scaleX(.2f).alpha(0).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
                     new Handler().postDelayed(() -> {
@@ -147,5 +161,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             text_option4.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.BG));
             chosen = 4;
         }
+    }
+
+    private void setScoreProgress() {
+        int score = new ScoreClass(answers).getScorePercentage();
+        text_score.setText(String.valueOf(score));
+        ObjectAnimator progressAnimator;
+        progressAnimator = ObjectAnimator.ofInt(progress_score, "progress", 0, score);
+        progressAnimator.setDuration(1000);
+        progressAnimator.setInterpolator(new OvershootInterpolator());
+        progressAnimator.start();
     }
 }

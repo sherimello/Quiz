@@ -52,6 +52,10 @@ public class ProgressClass {
 
     }
 
+    public void setQuestionCountToNegativeOne() {
+        question_count = -1;
+    }
+
     public void updateProgress() {
         question_count++;
         view_progress.animate().scaleX(0.04f * question_count).setDuration(500).setInterpolator(new OvershootInterpolator());
@@ -65,7 +69,6 @@ public class ProgressClass {
             view_progress.animate().scaleX(0.04f * question_count).setDuration(500).setInterpolator(new OvershootInterpolator());
             return;
         }
-
 
 
         text_option1.setBackgroundTintList(null);
