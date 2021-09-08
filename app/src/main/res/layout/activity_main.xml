@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="#2E334E"
+    tools:context=".MainActivity">
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="17dp"
+        android:animateLayoutChanges="true"
+        app:cardBackgroundColor="#2E334E"
+        app:cardCornerRadius="41dp"
+        app:cardElevation="11dp">
+
+        <RelativeLayout
+            android:id="@+id/relative_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:background="@drawable/rounded_stroke">
+
+
+            <View
+                android:id="@+id/view_progress"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:background="@drawable/gradient1"
+                android:scaleX="0"
+                android:transformPivotX="0dp" />
+
+            <TextView
+                android:id="@+id/text_question_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="11dp"
+                android:text="@string/_0_25"
+                android:textColor="#ffffff"
+                android:textSize="19sp"
+                android:textStyle="bold" />
+
+            <ProgressBar
+                android:id="@+id/progress_circular"
+                android:layout_width="31dp"
+                android:layout_height="31dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="11dp" />
+
+            <ImageView
+                android:id="@+id/image_done"
+                android:layout_width="31dp"
+                android:layout_height="31dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="11dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_baseline_thumb_up_alt_24"
+                android:visibility="gone"
+                app:tint="@color/white" />
+
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_query"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/card_answer"
+        android:layout_below="@id/card_progress"
+        android:layout_margin="27dp"
+        android:animateLayoutChanges="true"
+        app:cardBackgroundColor="#3E3570"
+        app:cardCornerRadius="21dp"
+        app:cardElevation="11dp">
+
+        <ScrollView
+            android:id="@+id/scroll_query"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="11dp"
+                android:animateLayoutChanges="true"
+                android:gravity="top"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="11dp"
+                    android:background="@drawable/rounded_stroke">
+
+                    <TextView
+                        android:id="@+id/text_counter"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="1"
+                        android:textColor="@color/white"
+                        app:autoSizeTextType="uniform" />
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/text_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="11dp"
+                    android:gravity="center"
+                    android:text="@string/dummy_question"
+                    android:textColor="#77ffffff"
+                    android:textSize="19sp"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/text_option1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="11dp"
+                    android:background="@drawable/rounded_bg"
+                    android:contentDescription="@string/_1"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:padding="11dp"
+                    android:text="@string/dummy1"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_option2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="11dp"
+                    android:background="@drawable/rounded_bg"
+                    android:contentDescription="@string/_2"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:padding="11dp"
+                    android:text="@string/dummy2"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_option3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="11dp"
+                    android:background="@drawable/rounded_bg"
+                    android:contentDescription="@string/_3"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:padding="11dp"
+                    android:text="@string/dummy3"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_option4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="11dp"
+                    android:background="@drawable/rounded_bg"
+                    android:contentDescription="@string/_4"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:padding="11dp"
+                    android:text="@string/dummy4"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </ScrollView>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_answer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginEnd="17dp"
+        android:layout_marginBottom="34dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="#3E3570"
+        app:cardCornerRadius="100dp"
+        app:cardElevation="17dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="17dp"
+            android:drawableStart="@drawable/done"
+            android:drawablePadding="7dp"
+            android:drawableTint="@color/white"
+            android:gravity="center"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:text="answer"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_result"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:cardElevation="21dp"
+        tools:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/text_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/progress_score"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="11dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginEnd="11dp"
+                android:layout_marginBottom="11dp"
+                android:fontFamily="@font/montserrat"
+                android:text="awesome!!!"
+                android:textSize="27sp" />
+
+            <ProgressBar
+                android:id="@+id/progress_score"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_centerInParent="true"
+                android:indeterminateOnly="false"
+                android:progressDrawable="@drawable/ring"
+                tools:progress="20" />
+
+            <TextView
+                android:id="@+id/text_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="19%"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            <Button
+                android:id="@+id/button_play_again"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="7dp"
+                android:fontFamily="@font/bontserrat_bold"
+                android:text="@string/play_again"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/button_quit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/button_play_again"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
+                android:layout_marginBottom="-4dp"
+                android:backgroundTint="#DDD"
+                android:fontFamily="@font/bontserrat_bold"
+                android:text="@string/quit"
+                android:textAllCaps="false"
+                android:textColor="@color/black" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
