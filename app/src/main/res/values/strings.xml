@@ -15,4 +15,10 @@
     <string name="score">score:</string>
     <string name="quit">quit</string>
     <string name="awesome">awesome!!!</string>
+    <string name="squiz">sQUIZ</string>
+    <string name="welcome_to">welcome to</string>
+    <string name="app_dialog">pissed at all the tedious efforts of old school quiz platforms? try giving sQUIZ a try. all your awesome quizzes just a tap away...</string>
+    <string name="quiz_id">quiz ID</string>
+    <string name="e_g_sherimello">e.g. sheriMello</string>
+    <string name="attend">attend</string>
 </resources>

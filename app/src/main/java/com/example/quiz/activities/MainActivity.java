@@ -1,15 +1,14 @@
-package com.example.quiz;
+package com.example.quiz.activities;
 
 import static java.lang.System.exit;
 
 import android.animation.ObjectAnimator;
-import android.graphics.Color;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,15 +18,23 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
+import com.example.quiz.R;
 import com.example.quiz.classes.ProgressClass;
 import com.example.quiz.classes.ScoreClass;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -40,14 +47,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ProgressClass pc;
     private ImageView image_done;
     private ProgressBar progressBar, progress_score;
-    private int chosen = 0;
     private ObjectAnimator animator;
-    private ArrayList<String> answers;
+    private ArrayList<String> answers, questions, options, correctAnswers;
+    private DatabaseReference databaseReference;
+    private String quizID = "", chosen = "";
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        quizID = intent.getStringExtra("quizID");
 
         relative_progress = findViewById(R.id.relative_progress);
         view_progress = findViewById(R.id.view_progress);
@@ -77,10 +89,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button_quit.setOnClickListener(this);
         button_play_again.setOnClickListener(this);
 
+        progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog.setMessage("fetching quiz data...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        initDatabase();
+
         answers = new ArrayList<>();
 
-        pc = new ProgressClass(relative_progress, view_progress, text_question_count, text_option1, text_option2, text_option3, text_option4, text_question, image_done, progressBar, text_counter);
+    }
 
+    private void initDatabase() {
+        questions = new ArrayList<>();
+        options = new ArrayList<>();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("Quizzes").child(quizID).child("Questions").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    questions.add(Objects.requireNonNull(dataSnapshot.child("que").getValue()).toString());
+
+                    options.add(Objects.requireNonNull(dataSnapshot.child("1").getValue()).toString());
+                    options.add(Objects.requireNonNull(dataSnapshot.child("2").getValue()).toString());
+                    options.add(Objects.requireNonNull(dataSnapshot.child("3").getValue()).toString());
+                    options.add(Objects.requireNonNull(dataSnapshot.child("4").getValue()).toString());
+                }
+                pc = new ProgressClass(relative_progress, view_progress, text_question_count, text_option1, text_option2, text_option3, text_option4, text_question, image_done, progressBar, text_counter, options, questions);
+                pc.initQuestions();
+                progressDialog.cancel();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+                Snackbar.make(text_counter, error.getMessage(), Snackbar.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     @Override
@@ -93,8 +140,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v == button_play_again) {
             card_result.animate().scaleY(.1f).scaleX(.2f).alpha(0).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
             new Handler().postDelayed(() -> {
-                pc.setQuestionCountToNegativeOne();
-                pc.updateProgress();
+//                pc.initQuestions();
+                view_progress.animate().scaleX(0).setDuration(1000);
                 card_result.setVisibility(View.GONE);
                 card_query.animate().scaleY(1).scaleX(1).alpha(1).setDuration(500).setInterpolator(new OvershootInterpolator());
                 scroll_query.setVisibility(View.VISIBLE);
@@ -102,20 +149,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if (v == card_answer) {
-            if (scroll_query.getVisibility() == View.VISIBLE && card_query.getScaleY() == 1 && chosen != 0) {
-                answers.add(String.valueOf(chosen));
-                chosen = 0;
-                if (answers.size() == 25) {
-                    setScoreProgress();
-                    scroll_query.setVisibility(View.GONE);
-                    card_query.animate().scaleY(.1f).scaleX(.2f).alpha(0).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
-                    new Handler().postDelayed(() -> {
-                        card_result.setAlpha(0);
-                        card_result.setVisibility(View.VISIBLE);
-                        card_result.animate().scaleY(1).scaleX(1).setDuration(500).alpha(1).setInterpolator(new OvershootInterpolator());
-                        scroll_query.setVisibility(View.VISIBLE);
-                        pc.updateProgress();
-                    }, 701);
+            if (scroll_query.getVisibility() == View.VISIBLE && card_query.getScaleY() == 1 && !chosen.isEmpty()) {
+                answers.add(chosen);
+                chosen = "";
+                if (answers.size() == questions.size()) {
+                    correctAnswers = new ArrayList<>();
+                    databaseReference = FirebaseDatabase.getInstance().getReference();
+                    databaseReference.child("Quizzes").child(quizID).child("Answers")
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                        correctAnswers.add(Objects.requireNonNull(dataSnapshot.getValue()).toString());
+                                    }
+                                    pc.updateProgress();
+                                    setScoreProgress();
+                                    scroll_query.setVisibility(View.GONE);
+                                    card_query.animate().scaleY(.1f).scaleX(.2f).alpha(0).setDuration(500).setInterpolator(new AccelerateDecelerateInterpolator());
+                                    new Handler().postDelayed(() -> {
+                                        card_result.setAlpha(0);
+                                        card_result.setVisibility(View.VISIBLE);
+                                        card_result.animate().scaleY(1).scaleX(1).setDuration(500).alpha(1).setInterpolator(new OvershootInterpolator());
+                                        scroll_query.setVisibility(View.VISIBLE);
+
+                                    }, 500);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
                     return;
                 }
                 scroll_query.setVisibility(View.GONE);
@@ -135,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             text_option2.setBackgroundTintList(null);
             text_option3.setBackgroundTintList(null);
             text_option4.setBackgroundTintList(null);
-            chosen = 1;
+            chosen = "1";
         }
         if (v == text_option2) {
             assert text_option1 != null;
@@ -143,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             text_option2.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.BG));
             text_option3.setBackgroundTintList(null);
             text_option4.setBackgroundTintList(null);
-            chosen = 2;
+            chosen = "2";
         }
         if (v == text_option3) {
             assert text_option1 != null;
@@ -151,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             text_option2.setBackgroundTintList(null);
             text_option3.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.BG));
             text_option4.setBackgroundTintList(null);
-            chosen = 3;
+            chosen = "3";
         }
         if (v == text_option4) {
             assert text_option1 != null;
@@ -159,17 +224,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             text_option2.setBackgroundTintList(null);
             text_option3.setBackgroundTintList(null);
             text_option4.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.BG));
-            chosen = 4;
+            chosen = "4";
         }
     }
 
     private void setScoreProgress() {
-        int score = new ScoreClass(answers).getScorePercentage();
+        int score = new ScoreClass(answers, correctAnswers).getScorePercentage();
         text_score.setText(String.valueOf(score));
         ObjectAnimator progressAnimator;
         progressAnimator = ObjectAnimator.ofInt(progress_score, "progress", 0, score);
         progressAnimator.setDuration(1000);
         progressAnimator.setInterpolator(new OvershootInterpolator());
         progressAnimator.start();
+        answers.clear();
     }
 }

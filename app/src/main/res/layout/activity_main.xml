@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="#2E334E"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
 
     <androidx.cardview.widget.CardView
@@ -110,11 +110,11 @@
 
                     <TextView
                         android:id="@+id/text_counter"
-                        android:layout_width="match_parent"
+                        android:layout_width="30dp"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:text="1"
+                        android:text="@string/_1"
                         android:textColor="@color/white"
                         app:autoSizeTextType="uniform" />
                 </RelativeLayout>
@@ -255,7 +255,7 @@
                 android:layout_marginEnd="11dp"
                 android:layout_marginBottom="11dp"
                 android:fontFamily="@font/montserrat"
-                android:text=""
+                android:text="@string/awesome"
                 android:textSize="27sp" />
 
             <ProgressBar
@@ -265,14 +265,14 @@
                 android:layout_centerInParent="true"
                 android:indeterminateOnly="false"
                 android:progressDrawable="@drawable/ring"
-                tools:progress="20" />
+                tools:progress="100" />
 
             <TextView
                 android:id="@+id/text_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text=""
+                android:text="19%"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <Button

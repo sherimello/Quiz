@@ -1,5 +1,6 @@
 package com.example.quiz.classes;
 
+import android.os.Handler;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 
 public class ProgressClass {
 
@@ -16,13 +18,13 @@ public class ProgressClass {
     private final View view_progress;
     private final TextView text_question_count, text_option1, text_option2, text_option3, text_option4, text_question;
     private static final int QUESTIONS = 25;
-    private int question_count = 0;
-    private final QuizData quizData;
+    private int question_count = 0, option_count = -1;
     private final ImageView image_done;
     private final ProgressBar progressBar;
     private final TextView text_counter;
+    private ArrayList<String> questions, options;
 
-    public ProgressClass(RelativeLayout relative_progress, View view_progress, TextView text_question_count, TextView text_option1, TextView text_option2, TextView text_option3, TextView text_option4, TextView text_question, ImageView image_done, ProgressBar progressBar, TextView text_counter) {
+    public ProgressClass(RelativeLayout relative_progress, View view_progress, TextView text_question_count, TextView text_option1, TextView text_option2, TextView text_option3, TextView text_option4, TextView text_question, ImageView image_done, ProgressBar progressBar, TextView text_counter, ArrayList<String> options, ArrayList<String> questions) {
         this.relative_progress = relative_progress;
         this.view_progress = view_progress;
         this.text_question_count = text_question_count;
@@ -34,57 +36,51 @@ public class ProgressClass {
         this.image_done = image_done;
         this.progressBar = progressBar;
         this.text_counter = text_counter;
+        this.questions = questions;
+        this.options = options;
+    }
 
-        int PROGRESS_WIDTH;
+    public void initQuestions() {
 
-        PROGRESS_WIDTH = view_progress.getResources().getDisplayMetrics().widthPixels;
-
-        quizData = new QuizData();
-        quizData.assignData();
+        text_question.setText(questions.get(question_count));
+        text_option1.setText(MessageFormat.format("a. {0}", options.get(++option_count)));
+        text_option2.setText(MessageFormat.format("b. {0}", options.get(++option_count)));
+        text_option3.setText(MessageFormat.format("c. {0}", options.get(++option_count)));
+        text_option4.setText(MessageFormat.format("d. {0}", options.get(++option_count)));
+        text_question_count.setText(MessageFormat.format("{0}/{1}", question_count, questions.size()));
         text_counter.setText(String.valueOf(question_count + 1));
-        text_question.setText(quizData.Questions.get(0));
-        text_option1.setText(MessageFormat.format("a. {0}", quizData.OptionA.get(0)));
-        text_option2.setText(MessageFormat.format("b. {0}", quizData.OptionB.get(0)));
-        text_option3.setText(MessageFormat.format("c. {0}", quizData.OptionC.get(0)));
-        text_option4.setText(MessageFormat.format("d. {0}", quizData.OptionD.get(0)));
 
-        Toast.makeText(relative_progress.getContext(), String.valueOf(PROGRESS_WIDTH), Toast.LENGTH_SHORT).show();
-
+        resetOptionsUI();
     }
 
-    public void setQuestionCountToNegativeOne() {
-        question_count = -1;
-    }
-
-    public void updateProgress() {
-        question_count++;
-        view_progress.animate().scaleX(0.04f * question_count).setDuration(500).setInterpolator(new OvershootInterpolator());
-        text_question_count.setText(MessageFormat.format("{0}/{1}", question_count, QUESTIONS));
-        if (question_count >= 25) {
-            Toast.makeText(relative_progress.getContext(), "done!", Toast.LENGTH_SHORT).show();
-            image_done.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
-            question_count = 0;
-            text_question_count.setText(MessageFormat.format("{0}/{1}", question_count, QUESTIONS));
-            view_progress.animate().scaleX(0.04f * question_count).setDuration(500).setInterpolator(new OvershootInterpolator());
-            return;
-        }
-
-
+    private void resetOptionsUI() {
         text_option1.setBackgroundTintList(null);
         text_option2.setBackgroundTintList(null);
         text_option3.setBackgroundTintList(null);
         text_option4.setBackgroundTintList(null);
+    }
 
-        text_counter.setText(String.valueOf(question_count + 1));
-        quizData.assignData();
-        text_question.setText(quizData.Questions.get(question_count));
-        text_option1.setText(MessageFormat.format("a. {0}", quizData.OptionA.get(question_count)));
-        text_option2.setText(MessageFormat.format("b. {0}", quizData.OptionB.get(question_count)));
-        text_option3.setText(MessageFormat.format("c. {0}", quizData.OptionC.get(question_count)));
-        text_option4.setText(MessageFormat.format("d. {0}", quizData.OptionD.get(question_count)));
+    public void updateProgress() {
+        question_count++;
+        if (question_count == questions.size()) {
+            text_question_count.setText(MessageFormat.format("{0}/{1}", question_count, questions.size()));
 
+            view_progress.animate().scaleX(1.0f / questions.size() * question_count).setDuration(700).setInterpolator(new OvershootInterpolator());
 
+            Toast.makeText(relative_progress.getContext(), "done!", Toast.LENGTH_SHORT).show();
+            image_done.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+            new Handler().postDelayed(() -> {
+
+                question_count = 0;
+                option_count = -1;
+                initQuestions();
+            }, 700);
+            return;
+        }
+        view_progress.animate().scaleX((1.0f / questions.size()) * question_count).setDuration(700).setInterpolator(new OvershootInterpolator());
+
+        initQuestions();
     }
 
 }
