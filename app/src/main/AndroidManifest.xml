@@ -9,10 +9,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Quiz">
         <activity
+            android:name=".activities.ChooseQuiz"
+            android:exported="true" />
+        <activity
             android:name=".activities.MainActivity"
             android:exported="true" />
         <activity
-            android:name=".activities.ChooseQuiz"
+            android:name=".activities.Splash"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

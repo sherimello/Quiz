@@ -5,12 +5,14 @@
       <map>
         <entry key="..\:/Quiz/app/src/main/res/drawable/done.xml" value="0.12264957264957264" />
         <entry key="..\:/Quiz/app/src/main/res/drawable/gradient1.xml" value="0.22320675105485233" />
+        <entry key="..\:/Quiz/app/src/main/res/drawable/gradient1_without_radius.xml" value="0.22320675105485233" />
         <entry key="..\:/Quiz/app/src/main/res/drawable/gradient2.xml" value="0.22320675105485233" />
         <entry key="..\:/Quiz/app/src/main/res/drawable/ring.xml" value="0.21851851851851853" />
         <entry key="..\:/Quiz/app/src/main/res/drawable/rounded_bg.xml" value="0.22606837606837607" />
         <entry key="..\:/Quiz/app/src/main/res/drawable/rounded_stroke.xml" value="0.22320675105485233" />
         <entry key="..\:/Quiz/app/src/main/res/layout/activity_choose_quiz.xml" value="0.21012658227848102" />
         <entry key="..\:/Quiz/app/src/main/res/layout/activity_main.xml" value="0.2128205128205128" />
+        <entry key="..\:/Quiz/app/src/main/res/layout/activity_splash.xml" value="0.21012658227848102" />
       </map>
     </option>
   </component>
