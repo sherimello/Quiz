@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient2"
+    android:animateLayoutChanges="true"
     tools:context=".activities.ChooseQuiz">
 
     <TextView
@@ -51,8 +52,8 @@
         android:layout_marginTop="?actionBarSize"
         android:fontFamily="@font/bontserrat_bold"
         android:includeFontPadding="false"
-        android:textColor="@color/white"
         android:text="@string/quiz_id"
+        android:textColor="@color/white"
         android:textSize="13sp" />
 
     <EditText

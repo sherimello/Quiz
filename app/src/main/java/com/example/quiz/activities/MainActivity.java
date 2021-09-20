@@ -16,7 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -103,17 +102,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         questions = new ArrayList<>();
         options = new ArrayList<>();
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child("Quizzes").child(quizID).child("Questions").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("Questions").child(quizID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     questions.add(Objects.requireNonNull(dataSnapshot.child("que").getValue()).toString());
 
-                    options.add(Objects.requireNonNull(dataSnapshot.child("1").getValue()).toString());
-                    options.add(Objects.requireNonNull(dataSnapshot.child("2").getValue()).toString());
-                    options.add(Objects.requireNonNull(dataSnapshot.child("3").getValue()).toString());
-                    options.add(Objects.requireNonNull(dataSnapshot.child("4").getValue()).toString());
+                    options.add(Objects.requireNonNull(dataSnapshot.child("_1").getValue()).toString());
+                    options.add(Objects.requireNonNull(dataSnapshot.child("_2").getValue()).toString());
+                    options.add(Objects.requireNonNull(dataSnapshot.child("_3").getValue()).toString());
+                    options.add(Objects.requireNonNull(dataSnapshot.child("_4").getValue()).toString());
                 }
                 pc = new ProgressClass(relative_progress, view_progress, text_question_count, text_option1, text_option2, text_option3, text_option4, text_question, image_done, progressBar, text_counter, options, questions);
                 pc.initQuestions();
@@ -155,10 +154,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (answers.size() == questions.size()) {
                     correctAnswers = new ArrayList<>();
                     databaseReference = FirebaseDatabase.getInstance().getReference();
-                    databaseReference.child("Quizzes").child(quizID).child("Answers")
+                    databaseReference.child("Answers").child(quizID)
                             .addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                    Toast.makeText(getApplicationContext(), Objects.requireNonNull(snapshot.getValue()).toString(), Toast.LENGTH_SHORT).show();
+
                                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                         correctAnswers.add(Objects.requireNonNull(dataSnapshot.getValue()).toString());
                                     }
@@ -200,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             text_option2.setBackgroundTintList(null);
             text_option3.setBackgroundTintList(null);
             text_option4.setBackgroundTintList(null);
-            chosen = "1";
+            chosen = text_option1.getText().toString().substring(3);
         }
         if (v == text_option2) {
             assert text_option1 != null;
@@ -208,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             text_option2.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.BG));
             text_option3.setBackgroundTintList(null);
             text_option4.setBackgroundTintList(null);
-            chosen = "2";
+            chosen = text_option2.getText().toString().substring(3);
         }
         if (v == text_option3) {
             assert text_option1 != null;
@@ -216,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             text_option2.setBackgroundTintList(null);
             text_option3.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.BG));
             text_option4.setBackgroundTintList(null);
-            chosen = "3";
+            chosen = text_option3.getText().toString().substring(3);
         }
         if (v == text_option4) {
             assert text_option1 != null;
@@ -224,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             text_option2.setBackgroundTintList(null);
             text_option3.setBackgroundTintList(null);
             text_option4.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.BG));
-            chosen = "4";
+            chosen = text_option4.getText().toString().substring(3);
         }
     }
 
