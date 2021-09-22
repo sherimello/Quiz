@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ProgressClass pc;
     private ImageView image_done;
     private ProgressBar progressBar, progress_score;
-    private ObjectAnimator animator;
     private ArrayList<String> answers, questions, options, correctAnswers;
     private DatabaseReference databaseReference;
     private String quizID = "", chosen = "";
@@ -158,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             .addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                    Toast.makeText(getApplicationContext(), Objects.requireNonNull(snapshot.getValue()).toString(), Toast.LENGTH_SHORT).show();
 
                                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                         correctAnswers.add(Objects.requireNonNull(dataSnapshot.getValue()).toString());

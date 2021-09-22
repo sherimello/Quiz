@@ -47,8 +47,8 @@ public class Splash extends AppCompatActivity {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
 
-                card1.animate().translationX(getResources().getDimensionPixelSize(R.dimen._80)).setDuration(500).setInterpolator(new OvershootInterpolator());
-                card2.animate().translationX(-getResources().getDimensionPixelSize(R.dimen._80)).setDuration(500).setInterpolator(new OvershootInterpolator()).setListener(new AnimatorListenerAdapter() {
+                card1.animate().translationX(card1.getMeasuredWidth() + getResources().getDimensionPixelSize(R.dimen._margin_for_splash)).setDuration(500).setInterpolator(new OvershootInterpolator());
+                card2.animate().translationX(-(card2.getMeasuredWidth() + getResources().getDimensionPixelSize(R.dimen._margin_for_splash))).setDuration(500).setInterpolator(new OvershootInterpolator()).setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
